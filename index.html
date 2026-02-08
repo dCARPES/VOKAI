@@ -3,66 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - CORE</title>
+    <title>NEXUS OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        body { background-color: #050505; color: #00ff41; font-family: monospace; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 65, 0.2); }
-        .nexus-input { background: transparent; border: 1px solid #00ff41; color: #00ff41; outline: none; }
+        body { 
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0; /* Slate 200 */
+            font-family: 'Inter', sans-serif;
+        }
+        /* Efeito Vidro (Glassmorphism) */
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-active {
+            background: rgba(56, 189, 248, 0.15); /* Sky Blue tint */
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+        }
+        /* Animação suave */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Esconder Scrollbar mas manter funcional */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="p-4 min-h-screen flex flex-col">
+<body class="h-screen flex flex-col overflow-hidden selection:bg-cyan-500 selection:text-white">
 
-    <header class="mb-6 border-b border-green-900 pb-2">
-        <h1 class="text-xl font-bold uppercase tracking-widest">Nexus <span class="text-white">v1.0</span></h1>
-        <p id="saudacao" class="text-xs opacity-70">Sistemas online, Senhor.</p>
+    <header class="p-4 flex justify-between items-center glass border-b-0 z-10">
+        <div>
+            <h1 class="text-lg font-semibold tracking-wide text-cyan-400">NEXUS</h1>
+            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Sistema Operacional Pessoal</p>
+        </div>
+        <div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></div>
     </header>
 
-    <div class="grid grid-cols-2 gap-4 mb-6">
-        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center">DIÁRIO MORAL</button>
-        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center text-blue-400">ESTUDOS DEX</button>
-        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center text-yellow-400">PROJETOS</button>
-        <button onclick="exportarDados()" class="glass p-4 rounded text-xs text-center text-red-400 font-bold">EXPORTAR BACKUP</button>
-    </div>
+    <main id="app-content" class="flex-grow p-4 overflow-y-auto no-scrollbar pb-24 relative">
+        
+        <div id="view-home" class="fade-in space-y-4">
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700 shadow-lg">
+                <h2 class="text-xl font-light">Olá, <span class="font-bold text-white">Senhor.</span></h2>
+                <p id="relogio" class="text-sm text-cyan-300 mt-1">Carregando dados temporais...</p>
+            </div>
 
-    <div class="flex-grow flex flex-col mb-4">
-        <h2 class="text-xs mb-2 opacity-50 uppercase">Memória RAM (Notas do Dia)</h2>
-        <textarea id="memo" class="glass w-full flex-grow p-3 text-sm nexus-input rounded" placeholder="O que é útil para hoje?"></textarea>
-    </div>
-
-    <div class="mt-auto">
-        <p class="text-[10px] mb-1 opacity-40">AUTO-SAVE ATIVADO (LOCAL)</p>
-        <div class="flex gap-2">
-            <span class="text-green-500">></span>
-            <input type="text" id="comando" class="w-full bg-transparent outline-none text-white text-sm" placeholder="Aguardando comando...">
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase ml-1">Notas Rápidas (RAM)</label>
+                <textarea id="ram-input" class="w-full h-40 bg-slate-800/50 rounded-xl p-4 text-sm outline-none border border-slate-700 focus:border-cyan-500 transition-colors placeholder-slate-600 resize-none" placeholder="Digite ideias, tarefas ou lembretes aqui..."></textarea>
+                <div class="flex justify-end">
+                    <button onclick="copiarRAM()" class="text-xs flex items-center gap-1 text-slate-400 hover:text-cyan-400 transition">
+                        <i data-lucide="copy" class="w-3 h-3"></i> Copiar
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div id="view-dex" class="hidden fade-in space-y-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i data-lucide="brain-circuit" class="w-5 h-5 text-cyan-400"></i>
+                <h2 class="font-semibold text-slate-200">Módulo DEX</h2>
+            </div>
+            
+            <p class="text-xs text-slate-400">Cole textos de aulas ou PDFs aqui para análise.</p>
+            
+            <textarea id="dex-input" class="w-full h-32 bg-slate-800/50 rounded-xl p-3 text-sm outline-none border border-slate-700 focus:border-purple-500 transition-colors placeholder-slate-600 resize-none" placeholder="Cole o conteúdo complexo aqui..."></textarea>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="alert('Configure a API Key nas Configurações primeiro!')" class="glass p-3 rounded-lg text-xs font-medium hover:bg-slate-700 transition text-cyan-300">
+                    Resumir
+                </button>
+                <button onclick="alert('Em breve: Criar Flashcards')" class="glass p-3 rounded-lg text-xs font-medium hover:bg-slate-700 transition text-purple-300">
+                    Criar Quiz
+                </button>
+            </div>
+
+            <div id="ai-output" class="hidden p-4 rounded-xl bg-slate-900 border border-slate-800 text-sm leading-relaxed text-slate-300">
+                </div>
+        </div>
+
+        <div id="view-settings" class="hidden fade-in space-y-6">
+            <h2 class="font-semibold text-slate-200 border-b border-slate-800 pb-2">Configurações do Sistema</h2>
+            
+            <div class="space-y-2">
+                <label class="text-xs text-slate-400 uppercase">Google Gemini API Key</label>
+                <input type="password" id="api-key" class="w-full bg-slate-900 rounded-lg p-3 text-sm outline-none border border-slate-700 focus:border-green-500" placeholder="Cole sua chave aqui...">
+                <p class="text-[10px] text-slate-500">Sua chave fica salva apenas no seu navegador.</p>
+            </div>
+            
+            <button onclick="salvarConfig()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium p-3 rounded-lg transition shadow-lg shadow-cyan-900/20">
+                Salvar Configurações
+            </button>
+            
+            <button onclick="limparTudo()" class="w-full border border-red-900/50 text-red-400 p-3 rounded-lg text-xs hover:bg-red-900/10 transition">
+                Resetar Sistema (Apagar Dados)
+            </button>
+        </div>
+
+    </main>
+
+    <nav class="glass fixed bottom-4 left-4 right-4 rounded-2xl flex justify-around items-center p-3 shadow-2xl z-50">
+        <button onclick="mudarAba('home')" id="btn-home" class="p-2 rounded-xl transition text-slate-400 glass-active">
+            <i data-lucide="home" class="w-6 h-6"></i>
+        </button>
+        <button onclick="mudarAba('dex')" id="btn-dex" class="p-2 rounded-xl transition text-slate-400 hover:text-white">
+            <i data-lucide="book-open" class="w-6 h-6"></i>
+        </button>
+        <button onclick="mudarAba('settings')" id="btn-settings" class="p-2 rounded-xl transition text-slate-400 hover:text-white">
+            <i data-lucide="settings" class="w-6 h-6"></i>
+        </button>
+    </nav>
 
     <script>
-        // Lógica de Auto-save (Salva enquanto você digita no Moto E20)
-        const memo = document.getElementById('memo');
-        
-        // Carrega o que foi salvo antes
-        memo.value = localStorage.getItem('nexus_backup') || '';
+        // Inicializar ícones
+        lucide.createIcons();
 
-        // Salva a cada tecla pressionada
-        memo.addEventListener('input', () => {
-            localStorage.setItem('nexus_backup', memo.value);
-        });
+        // ELEMENTOS
+        const views = {
+            home: document.getElementById('view-home'),
+            dex: document.getElementById('view-dex'),
+            settings: document.getElementById('view-settings')
+        };
+        const btns = {
+            home: document.getElementById('btn-home'),
+            dex: document.getElementById('btn-dex'),
+            settings: document.getElementById('btn-settings')
+        };
+        const ramInput = document.getElementById('ram-input');
+        const apiKeyInput = document.getElementById('api-key');
+        const relogio = document.getElementById('relogio');
 
-        // Função de Exportar (Copia tudo para você colar no Zap)
-        function exportarDados() {
-            const texto = memo.value;
-            navigator.clipboard.writeText(texto);
-            alert("Memória copiada para a área de transferência! Cole no seu WhatsApp ou e-mail para backup.");
+        // LÓGICA DE NAVEGAÇÃO
+        function mudarAba(aba) {
+            // Esconde todas as telas
+            Object.values(views).forEach(el => el.classList.add('hidden'));
+            // Remove destaque dos botões
+            Object.values(btns).forEach(el => {
+                el.classList.remove('glass-active');
+                el.classList.remove('text-cyan-400');
+                el.classList.add('text-slate-400');
+            });
+
+            // Mostra a tela certa
+            views[aba].classList.remove('hidden');
+            // Destaca o botão certo
+            btns[aba].classList.add('glass-active');
+            btns[aba].classList.remove('text-slate-400');
         }
 
-        // Saudação por horário
-        const horas = new Date().getHours();
-        const msg = document.getElementById('saudacao');
-        if(horas < 12) msg.innerText = "Bom dia, Senhor. Sistemas prontos.";
-        else if(horas < 18) msg.innerText = "Boa tarde, Senhor. Processando dados.";
-        else msg.innerText = "Boa noite, Senhor. Arquivando progresso.";
+        // PERSISTÊNCIA DE DADOS (Auto-Save)
+        function carregarDados() {
+            ramInput.value = localStorage.getItem('nexus_ram') || '';
+            apiKeyInput.value = localStorage.getItem('nexus_api_key') || '';
+        }
+
+        ramInput.addEventListener('input', () => {
+            localStorage.setItem('nexus_ram', ramInput.value);
+        });
+
+        function salvarConfig() {
+            localStorage.setItem('nexus_api_key', apiKeyInput.value);
+            alert('Sistema: Chave de API salva com segurança no dispositivo.');
+        }
+
+        function limparTudo() {
+            if(confirm('Tem certeza? Isso apagará suas notas locais.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function copiarRAM() {
+            navigator.clipboard.writeText(ramInput.value);
+            alert('Copiado para a área de transferência.');
+        }
+
+        // RELÓGIO E DATA
+        setInterval(() => {
+            const now = new Date();
+            const opcoes = { weekday: 'long', day: 'numeric', month: 'long' };
+            const dataStr = now.toLocaleDateString('pt-BR', opcoes);
+            const horaStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            relogio.innerHTML = `<span class="capitalize">${dataStr}</span> • ${horaStr}`;
+        }, 1000);
+
+        // Inicialização
+        carregarDados();
     </script>
 </body>
-</html>
+                </html>
