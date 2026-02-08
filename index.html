@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - CORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #050505; color: #00ff41; font-family: monospace; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 65, 0.2); }
+        .nexus-input { background: transparent; border: 1px solid #00ff41; color: #00ff41; outline: none; }
+    </style>
+</head>
+<body class="p-4 min-h-screen flex flex-col">
+
+    <header class="mb-6 border-b border-green-900 pb-2">
+        <h1 class="text-xl font-bold uppercase tracking-widest">Nexus <span class="text-white">v1.0</span></h1>
+        <p id="saudacao" class="text-xs opacity-70">Sistemas online, Senhor.</p>
+    </header>
+
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center">DIÁRIO MORAL</button>
+        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center text-blue-400">ESTUDOS DEX</button>
+        <button onclick="alert('Módulo em desenvolvimento')" class="glass p-4 rounded text-xs text-center text-yellow-400">PROJETOS</button>
+        <button onclick="exportarDados()" class="glass p-4 rounded text-xs text-center text-red-400 font-bold">EXPORTAR BACKUP</button>
+    </div>
+
+    <div class="flex-grow flex flex-col mb-4">
+        <h2 class="text-xs mb-2 opacity-50 uppercase">Memória RAM (Notas do Dia)</h2>
+        <textarea id="memo" class="glass w-full flex-grow p-3 text-sm nexus-input rounded" placeholder="O que é útil para hoje?"></textarea>
+    </div>
+
+    <div class="mt-auto">
+        <p class="text-[10px] mb-1 opacity-40">AUTO-SAVE ATIVADO (LOCAL)</p>
+        <div class="flex gap-2">
+            <span class="text-green-500">></span>
+            <input type="text" id="comando" class="w-full bg-transparent outline-none text-white text-sm" placeholder="Aguardando comando...">
+        </div>
+    </div>
+
+    <script>
+        // Lógica de Auto-save (Salva enquanto você digita no Moto E20)
+        const memo = document.getElementById('memo');
+        
+        // Carrega o que foi salvo antes
+        memo.value = localStorage.getItem('nexus_backup') || '';
+
+        // Salva a cada tecla pressionada
+        memo.addEventListener('input', () => {
+            localStorage.setItem('nexus_backup', memo.value);
+        });
+
+        // Função de Exportar (Copia tudo para você colar no Zap)
+        function exportarDados() {
+            const texto = memo.value;
+            navigator.clipboard.writeText(texto);
+            alert("Memória copiada para a área de transferência! Cole no seu WhatsApp ou e-mail para backup.");
+        }
+
+        // Saudação por horário
+        const horas = new Date().getHours();
+        const msg = document.getElementById('saudacao');
+        if(horas < 12) msg.innerText = "Bom dia, Senhor. Sistemas prontos.";
+        else if(horas < 18) msg.innerText = "Boa tarde, Senhor. Processando dados.";
+        else msg.innerText = "Boa noite, Senhor. Arquivando progresso.";
+    </script>
+</body>
+</html>
