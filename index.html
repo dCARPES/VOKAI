@@ -1,373 +1,217 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOKAI OS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>VOKAI</title>
+    <link rel="manifest" href="manifest.json">
     <style>
+        /* --- ESTÉTICA CORE (ZERO LATÊNCIA) --- */
         :root {
-            --bg-color: #050505;
-            --card-bg: rgba(20, 20, 20, 0.6);
-            --primary-gold: #D4AF37;
-            --gold-gradient: linear-gradient(135deg, #F0C420 0%, #D4AF37 50%, #8E7008 100%);
-            --cyan-glow: #00f2ff;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --border-radius: 16px;
+            --bg-color: #000000;
+            --text-primary: #EAEAEA;
+            --text-secondary: #888888;
+            --accent: #FFFFFF;
+            --border: #222222;
+            --grid-gap: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px 16px;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            overflow: hidden;
-            background: radial-gradient(circle at top, #1a1a10 0%, #000000 60%);
+            overflow: hidden; /* Evita scroll na estrutura base */
         }
 
-        /* --- Header & Logo --- */
-        .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            opacity: 0.7;
+        /* CABEÇALHO KAIROS */
+        header {
+            margin-bottom: 24px;
+            padding-top: 10px;
         }
-
-        .system-status {
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 400px;
-            margin-top: -40px; /* Leve ajuste visual para cima */
-        }
-
-        /* Logo SVG Container */
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
-            animation: pulse-gold 4s infinite ease-in-out;
-        }
-
-        .vokai-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 4px;
-            font-weight: 700;
+        .kairos-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
         }
-
-        .vokai-subtitle {
-            font-size: 0.7rem;
-            color: var(--primary-gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.8;
-            margin-bottom: 40px;
-        }
-
-        /* --- Relógio --- */
-        .greeting {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .clock {
-            font-size: 3.5rem;
-            font-weight: 300;
-            font-family: 'Rajdhani', sans-serif;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-        }
-
-        /* --- Input Card (Glassmorphism) --- */
-        .input-card {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            position: relative;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .input-card:focus-within {
-            border-color: rgba(212, 175, 55, 0.4);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-        }
-
-        .ram-tag {
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: #000;
-            color: var(--primary-gold);
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #ccc;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            resize: none;
-            outline: none;
-            min-height: 120px;
-        }
-
-        textarea::placeholder {
-            color: #555;
-        }
-
-        .save-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            color: var(--primary-gold);
-            background: transparent;
-            border: none;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-
-        .save-btn:hover {
-            opacity: 1;
-            text-shadow: 0 0 8px var(--primary-gold);
-        }
-
-        /* --- Bottom Navigation --- */
-        .bottom-nav {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .nav-card {
-            flex: 1;
-            height: 80px;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s, border-color 0.3s;
-        }
-
-        .nav-card:active {
-            transform: scale(0.98);
-        }
-
-        .nav-card.dex {
-            border-bottom: 2px solid transparent;
-        }
-        
-        /* Efeito de brilho ao passar o mouse ou ativar */
-        .nav-card.dex:hover {
-            border-color: rgba(0, 242, 255, 0.3);
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
-        }
-
-        .nav-card.dex .icon { color: var(--cyan-glow); }
-        
-        .nav-card.config:hover {
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-        }
-        .nav-card.config .icon { color: #888; }
-
-
-        .nav-card .icon {
+        .kairos-greeting {
             font-size: 1.5rem;
-            margin-bottom: 5px;
-            transition: color 0.3s;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
-        .nav-card span {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #fff;
+        /* GRID MODULAR (CONTAINER) */
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: var(--grid-gap);
+            flex-grow: 1;
+            margin-bottom: 80px; /* Espaço para a dock */
         }
 
-        /* --- Footer Icons --- */
-        .footer-dock {
+        .module-card {
+            background: #050505;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.1s;
+            cursor: pointer;
+        }
+
+        .module-card:active {
+            border-color: var(--text-secondary);
+            background: #0a0a0a;
+        }
+
+        .card-icon { font-size: 1.2rem; margin-bottom: 8px; color: var(--text-secondary); }
+        .card-title { font-size: 0.9rem; font-weight: 500; }
+        .card-status { font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px; }
+
+        /* MÓDULO GRANDE (SEGUNDO CÉREBRO) */
+        .module-wide {
+            grid-column: span 2;
+        }
+
+        /* DOCK DE CONTROLE (BARRA INFERIOR) */
+        .control-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 90%;
-            height: 60px;
-            background: rgba(10, 10, 10, 0.8);
-            border-radius: 30px;
+            max-width: 400px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 24px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .dock-icon {
-            color: #555;
-            font-size: 1.2rem;
-            padding: 10px;
-        }
-        
-        .dock-icon.active {
-            color: var(--primary-gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            padding: 12px 0;
+            backdrop-filter: blur(10px); /* Opcional, remover se pesar */
+            z-index: 100;
         }
 
-        /* --- Animations --- */
-        @keyframes pulse-gold {
-            0% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.1)); }
-            50% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
-            100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.1)); }
+        .dock-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            padding: 10px;
+            cursor: pointer;
+            transition: color 0.2s;
         }
+
+        .dock-btn.active { color: var(--accent); }
+
+        /* BOTÃO VONTADE (V-KEY) */
+        .v-key-container {
+            position: relative;
+            top: -20px;
+        }
+        .v-key {
+            width: 56px;
+            height: 56px;
+            background: var(--text-primary);
+            color: var(--bg-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            border: 4px solid var(--bg-color); /* Cria recorte visual */
+        }
+        .v-key:active { transform: scale(0.95); }
 
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="system-status">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 14a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm1-4a1 1 0 0 1-2 0V9a1 1 0 0 1 2 0z"/>
-            </svg>
-            <span style="color: #555">VOKAI OS</span>
-        </div>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-            <path d="M23 4v6h-6M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
-    </div>
+    <header>
+        <div class="kairos-time" id="kairos-display">INICIANDO SISTEMA...</div>
+        <div class="kairos-greeting">Pronto para agir.</div>
+    </header>
 
-    <div class="main-content">
-        <div class="logo-container">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#F0C420;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#B88A00;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M30 30 L50 75 L70 30" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M70 30 L82 18 M82 18 L72 18 M82 18 L82 28" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="48" y="20" width="4" height="4" transform="rotate(45 50 22)" fill="url(#goldGrad)" />
-            </svg>
-        </div>
-
-        <h1 class="vokai-title">VOKAI</h1>
-        <div class="vokai-subtitle">SISTEMAS ONLINE</div>
-
-        <div class="greeting">O que vamos conquistar hoje?</div>
-        <div class="clock" id="clock">17:33</div>
-
-        <div class="input-card">
-            <div class="ram-tag">MEMÓRIA RAM</div>
-            <textarea placeholder="Esvazie sua mente aqui..."></textarea>
-            <button class="save-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                    <polyline points="7 3 7 8 15 8"></polyline>
-                </svg>
-                Salvar
-            </button>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-card dex">
-            <div class="icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
+    <main class="module-grid">
+        <div class="module-card module-wide" onclick="alert('Módulo Notas: Em breve')">
+            <div class="card-icon">◇</div>
+            <div>
+                <div class="card-title">Córtex</div>
+                <div class="card-status">0 Notas ativas</div>
             </div>
-            <span>DEX</span>
         </div>
 
-        <div class="nav-card config">
-            <div class="icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
+        <div class="module-card" onclick="alert('Módulo Agenda: Em breve')">
+            <div class="card-icon">◷</div>
+            <div>
+                <div class="card-title">Kairos</div>
+                <div class="card-status">Sem eventos</div>
             </div>
-            <span>CONFIG</span>
         </div>
-    </div>
 
-    <div class="footer-dock">
-        <div class="dock-icon active">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <div class="module-card" onclick="alert('Módulo Hábitos: Em breve')">
+            <div class="card-icon">◎</div>
+            <div>
+                <div class="card-title">Vontade</div>
+                <div class="card-status">Rastrear</div>
+            </div>
         </div>
-        <div class="dock-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+
+        <div class="module-card module-wide" onclick="alert('Módulo IA: Em breve')">
+            <div class="card-icon">◈</div>
+            <div>
+                <div class="card-title">Especialista</div>
+                <div class="card-status">Offline</div>
+            </div>
         </div>
-        <div class="dock-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+    </main>
+
+    <nav class="control-dock">
+        <button class="dock-btn active">▦</button> <div class="v-key-container">
+            <div class="v-key">V</div>
         </div>
-    </div>
+
+        <button class="dock-btn">🔍</button> </nav>
 
     <script>
-        function updateTime() {
+        // --- SCRIPT DO SISTEMA VOKAI CORE ---
+        
+        // 1. Atualizador do Relógio Kairos
+        function updateKairos() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+            const options = { weekday: 'long', hour: '2-digit', minute: '2-digit' };
+            // Formata e coloca em maiúsculo
+            document.getElementById('kairos-display').innerText = 
+                now.toLocaleDateString('pt-BR', options).toUpperCase().replace('-FEIRA', '') + ' | AGORA';
         }
-        setInterval(updateTime, 1000);
-        updateTime();
+        
+        setInterval(updateKairos, 1000);
+        updateKairos();
+
+        // 2. Registro do Service Worker (Para funcionar Offline)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('VOKAI SW registrado'))
+                    .catch(err => console.log('Falha no SW:', err));
+            });
+        }
     </script>
 </body>
-    </html>
+</html>
